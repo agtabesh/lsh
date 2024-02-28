@@ -1,5 +1,3 @@
 package types
 
-type Vector interface {
-	Quantitative | Qualitative
-}
+type Vector map[VectorID]float64
