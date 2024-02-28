@@ -3,6 +3,7 @@ module github.com/agtabesh/lsh
 go 1.22.0
 
 require (
+	github.com/pierrec/xxHash v0.1.5
 	github.com/stretchr/testify v1.8.4
 )
 
