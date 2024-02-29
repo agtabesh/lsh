@@ -7,20 +7,20 @@ import (
 	"github.com/agtabesh/lsh/internal/types"
 )
 
-var _ interfaces.SimilarityMeasure = (*HammingSimilarity)(nil)
+var _ interfaces.SimilarityMeasure = (*hammingSimilarity)(nil)
 
 const percision = 8
 
-type HammingSimilarity struct{}
+type hammingSimilarity struct{}
 
-func NewHammingSimilarity() *HammingSimilarity {
-	return &HammingSimilarity{}
+func newHammingSimilarity() *hammingSimilarity {
+	return &hammingSimilarity{}
 }
 
 // Calculate computes the hamming similarity between two signature x and y.
 // It returns the similarity as an integer value between 0 and 1.
 // The function assumes that x and y contain numeric values.
-func (sm *HammingSimilarity) Measure(x, y types.Signature) float64 {
+func (sm *hammingSimilarity) Measure(x, y types.Signature) float64 {
 	if len(x) != len(y) {
 		return 0
 	}
