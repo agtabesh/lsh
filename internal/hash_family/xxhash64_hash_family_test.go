@@ -1,16 +1,15 @@
-package hash_family_test
+package hash_family
 
 import (
 	"testing"
 
-	"github.com/agtabesh/lsh/internal/hash_family"
 	"github.com/agtabesh/lsh/internal/types"
 )
 
 func TestHash(t *testing.T) {
 	count := 3
 	text := "sample text"
-	hf := hash_family.NewXXHASH64HashFamily(count)
+	hf := newXXHASH64HashFamily(count)
 	hashes := hf.Hash(text)
 
 	expectedCount := count
@@ -41,7 +40,7 @@ func TestHash(t *testing.T) {
 func TestMinHash(t *testing.T) {
 	count := 3
 	vector := types.Vector{"a": 1, "b": 1, "c": 1}
-	hf := hash_family.NewXXHASH64HashFamily(count)
+	hf := newXXHASH64HashFamily(count)
 	hashes := hf.MinHash(vector)
 
 	expectedCount := count
