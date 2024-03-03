@@ -3,8 +3,8 @@ package similarity_measure
 import (
 	"math"
 
-	"github.com/agtabesh/lsh/internal/interfaces"
-	"github.com/agtabesh/lsh/internal/types"
+	"github.com/agtabesh/lsh/interfaces"
+	"github.com/agtabesh/lsh/types"
 )
 
 var _ interfaces.SimilarityMeasure = (*hammingSimilarity)(nil)

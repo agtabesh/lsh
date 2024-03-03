@@ -3,7 +3,7 @@ package hash_family
 import (
 	"hash"
 
-	"github.com/agtabesh/lsh/internal/types"
+	"github.com/agtabesh/lsh/types"
 	"github.com/pierrec/xxHash/xxHash64"
 )
 

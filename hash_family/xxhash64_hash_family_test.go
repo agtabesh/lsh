@@ -3,7 +3,7 @@ package hash_family
 import (
 	"testing"
 
-	"github.com/agtabesh/lsh/internal/types"
+	"github.com/agtabesh/lsh/types"
 )
 
 func TestHash(t *testing.T) {

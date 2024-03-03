@@ -3,8 +3,8 @@ package store
 import (
 	"context"
 
-	"github.com/agtabesh/lsh/internal/interfaces"
-	"github.com/agtabesh/lsh/internal/types"
+	"github.com/agtabesh/lsh/interfaces"
+	"github.com/agtabesh/lsh/types"
 )
 
 var _ interfaces.Store = (*inMemoryStore)(nil)
