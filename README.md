@@ -35,10 +35,10 @@ import (
     "fmt"
 
     "github.com/agtabesh/lsh"
-	"github.com/agtabesh/lsh/hash_family"
-	"github.com/agtabesh/lsh/similarity_measure"
-	"github.com/agtabesh/lsh/store"
-	"github.com/agtabesh/lsh/types"
+    "github.com/agtabesh/lsh/hash_family"
+    "github.com/agtabesh/lsh/similarity_measure"
+    "github.com/agtabesh/lsh/store"
+    "github.com/agtabesh/lsh/types"
 )
 ```
 
