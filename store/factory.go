@@ -3,7 +3,7 @@ package store
 import (
 	"fmt"
 
-	"github.com/agtabesh/lsh/internal/interfaces"
+	"github.com/agtabesh/lsh/interfaces"
 )
 
 type Store string

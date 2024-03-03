@@ -3,7 +3,7 @@ package similarity_measure
 import (
 	"fmt"
 
-	"github.com/agtabesh/lsh/internal/interfaces"
+	"github.com/agtabesh/lsh/interfaces"
 )
 
 type SimilarityMeasure string

@@ -3,7 +3,7 @@ package hash_family
 import (
 	"fmt"
 
-	"github.com/agtabesh/lsh/internal/interfaces"
+	"github.com/agtabesh/lsh/interfaces"
 )
 
 type HashFamily string

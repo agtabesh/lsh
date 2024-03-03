@@ -3,7 +3,7 @@ package similarity_measure
 import (
 	"testing"
 
-	"github.com/agtabesh/lsh/internal/types"
+	"github.com/agtabesh/lsh/types"
 )
 
 func TestMeasure1(t *testing.T) {

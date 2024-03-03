@@ -3,7 +3,7 @@ package interfaces
 import (
 	"context"
 
-	"github.com/agtabesh/lsh/internal/types"
+	"github.com/agtabesh/lsh/types"
 )
 
 type Store interface {
