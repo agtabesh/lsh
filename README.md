@@ -1,7 +1,7 @@
 # Locality-Sensing Hashing (LSH)
 
 - [Introduction](#introduction)
-- [Insallation](#insallation)
+- [Installation](#installation)
 - [Usage](#usage)
     - [Importing package](#importing-package)
     - [Creating an LSH Instance](#creating-an-lsh-Instance)
@@ -31,12 +31,12 @@ Import the library in your Go code:
 
 ```go
 import (
-	"context"
+    "context"
 
-	"github.com/agtabesh/lsh/hash_family"
-	"github.com/agtabesh/lsh/similarity_measure"
-	"github.com/agtabesh/lsh/store"
-	"github.com/agtabesh/lsh/types"
+    "github.com/agtabesh/lsh/hash_family"
+    "github.com/agtabesh/lsh/similarity_measure"
+    "github.com/agtabesh/lsh/store"
+    "github.com/agtabesh/lsh/types"
 )
 ```
 
@@ -69,7 +69,7 @@ vectors := []types.Vector{
     {"feat1": 1, "feat2": 1, "feat6": 1, "feat7": 1},
 }
 for i, vector := range vectors {
-	vectorID := types.VectorID(fmt.Sprint(i))
+    vectorID := types.VectorID(fmt.Sprint(i))
     err := lsh.Add(ctx, vectorID, vector)
     if err != nil {
         // Handle error
