@@ -32,11 +32,13 @@ Import the library in your Go code:
 ```go
 import (
     "context"
+    "fmt"
 
-    "github.com/agtabesh/lsh/hash_family"
-    "github.com/agtabesh/lsh/similarity_measure"
-    "github.com/agtabesh/lsh/store"
-    "github.com/agtabesh/lsh/types"
+    "github.com/agtabesh/lsh"
+	"github.com/agtabesh/lsh/hash_family"
+	"github.com/agtabesh/lsh/similarity_measure"
+	"github.com/agtabesh/lsh/store"
+	"github.com/agtabesh/lsh/types"
 )
 ```
 
@@ -45,15 +47,15 @@ To create an instance of LSH, you need to specify the configuration parameters u
 ### Creating an LSH Instance
 
 ```go
-config := LSHConfig{
+config := lsh.LSHConfig{
     SignatureSize:     128,
-    BandSize:          32,
+    BandSize:          64,
     HashFamily:        hash_family.XXHash64,
     SimilarityMeasure: similarity_measure.HammingSimilarity,
     Store:             store.InMemoryStore,
 }
 
-lsh, err := NewLSH(config)
+instance, err := lsh.NewLSH(config)
 if err != nil {
     // Handle error
 }
@@ -63,6 +65,7 @@ if err != nil {
 You can add vectors to the LSH service using the `Add` method:
 
 ```go
+ctx := context.Background()
 vectors := []types.Vector{
     {"feat1": 1, "feat2": 1, "feat3": 1},
     {"feat1": 1, "feat4": 1, "feat5": 1},
@@ -70,7 +73,7 @@ vectors := []types.Vector{
 }
 for i, vector := range vectors {
     vectorID := types.VectorID(fmt.Sprint(i))
-    err := lsh.Add(ctx, vectorID, vector)
+    err := instance.Add(ctx, vectorID, vector)
     if err != nil {
         // Handle error
     }
@@ -85,12 +88,14 @@ for i, vector := range vectors {
 You can perform a query using a vector ID using the `QueryByVectorID` method:
 
 ```go
-vectorID := types.VectorID("1")
+ctx := context.Background()
+vectorID := types.VectorID("0")
 count := 5
-similarVectors, err := lsh.QueryByVectorID(context.Background(), vectorID, count)
+similarVectorsId, err := instance.QueryByVectorID(ctx, vectorID, count)
 if err != nil {
     // Handle error
 }
+fmt.Println("similarVectors", similarVectorsId)
 ```
 
 ### Querying by Vector
@@ -98,12 +103,14 @@ if err != nil {
 You can perform a query using a vector using the `QueryByVector` method:
 
 ```go
+ctx := context.Background()
 vector := types.Vector{"feat1": 1, "feat2": 1, "feat3": 1}
 count := 5
-similarVectors, err := lsh.QueryByVector(context.Background(), vector, count)
+similarVectorsId, err := lsh.QueryByVector(ctx, vector, count)
 if err != nil {
     // Handle error
 }
+fmt.Println("similarVectors", similarVectorsId)
 ```
 
 
