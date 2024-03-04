@@ -6,20 +6,14 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/agtabesh/lsh/hash_family"
-	"github.com/agtabesh/lsh/similarity_measure"
-	"github.com/agtabesh/lsh/store"
+	"github.com/agtabesh/lsh/interfaces"
 	"github.com/agtabesh/lsh/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestAdd(t *testing.T) {
 	ctx := context.Background()
-	config := getConfig()
-	lsh, err := NewLSH(config)
-	assert.Nil(t, err)
-
-	hashFamily, err := hash_family.GetHashFamily(config.HashFamily, config.SignatureSize)
+	lsh, hashFamily, _, _, err := getInstance()
 	assert.Nil(t, err)
 
 	vectors := getSampleVectors()
@@ -39,8 +33,7 @@ func TestAdd(t *testing.T) {
 
 func TestQueryByVectorID(t *testing.T) {
 	ctx := context.Background()
-	config := getConfig()
-	lsh, err := NewLSH(config)
+	lsh, _, _, _, err := getInstance()
 	assert.Nil(t, err)
 
 	vectors := getSampleVectors()
@@ -61,8 +54,7 @@ func TestQueryByVectorID(t *testing.T) {
 
 func TestQueryByVector(t *testing.T) {
 	ctx := context.Background()
-	config := getConfig()
-	lsh, err := NewLSH(config)
+	lsh, _, _, _, err := getInstance()
 	assert.Nil(t, err)
 
 	vectors := getSampleVectors()
@@ -83,12 +75,28 @@ func TestQueryByVector(t *testing.T) {
 
 func getConfig() LSHConfig {
 	return LSHConfig{
-		SignatureSize:     128,
-		BandSize:          16,
-		HashFamily:        hash_family.XXHash64,
-		SimilarityMeasure: similarity_measure.HammingSimilarity,
-		Store:             store.InMemoryStore,
+		SignatureSize: 128,
+		BandSize:      16,
 	}
+}
+
+func getInstance() (
+	*LSH,
+	interfaces.HashFamily,
+	interfaces.SimilarityMeasure,
+	interfaces.Store,
+	error,
+) {
+	config := getConfig()
+	hashFamily := NewXXHASH64HashFamily(config.SignatureSize)
+	similarityMeasure := NewHammingSimilarity()
+	store := NewInMemoryStore()
+
+	lsh, err := NewLSH(config, hashFamily, similarityMeasure, store)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+	return lsh, hashFamily, similarityMeasure, store, nil
 }
 
 func getSampleVectors() []types.Vector {
