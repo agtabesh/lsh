@@ -110,5 +110,3 @@ if err != nil {
 }
 fmt.Println("similarVectors", similarVectorsID)
 ```
-
-
