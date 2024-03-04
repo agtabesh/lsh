@@ -53,7 +53,7 @@ hashFamily := lsh.NewXXHASH64HashFamily(config.SignatureSize)
 similarityMeasure := lsh.NewHammingSimilarity()
 store := lsh.NewInMemoryStore()
 
-instance, err := NewLSH(config, hashFamily, similarityMeasure, store)
+instance, err := lsh.NewLSH(config, hashFamily, similarityMeasure, store)
 if err != nil {
     // Handle error
 }
