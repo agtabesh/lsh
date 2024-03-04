@@ -3,20 +3,14 @@ package lsh
 import (
 	"context"
 
-	"github.com/agtabesh/lsh/hash_family"
 	"github.com/agtabesh/lsh/interfaces"
-	"github.com/agtabesh/lsh/similarity_measure"
-	"github.com/agtabesh/lsh/store"
 	"github.com/agtabesh/lsh/types"
 )
 
 // LSHConfig holds configuration parameters for LSH.
 type LSHConfig struct {
-	SignatureSize     int                                  // SignatureSize is the size of the signature.
-	BandSize          int                                  // BandSize is the size of the band for hashing.
-	HashFamily        hash_family.HashFamily               // HashFamily is the hash family for LSH.
-	SimilarityMeasure similarity_measure.SimilarityMeasure // SimilarityMeasure is the measure used for similarity computation.
-	Store             store.Store                          // Store is the data store for LSH.
+	SignatureSize int // SignatureSize is the size of the signature.
+	BandSize      int // BandSize is the size of the band for hashing.
 }
 
 // LSH represents the Locality Sensitive Hashing service.
@@ -28,21 +22,12 @@ type LSH struct {
 }
 
 // NewLSH creates a new instance of LSH.
-func NewLSH(config LSHConfig) (*LSH, error) {
-	hashFamily, err := hash_family.GetHashFamily(config.HashFamily, config.SignatureSize)
-	if err != nil {
-		return nil, err
-	}
-
-	similarityMeasure, err := similarity_measure.GetSimilarityMeasure(config.SimilarityMeasure)
-	if err != nil {
-		return nil, err
-	}
-
-	store, err := store.GetStore(config.Store)
-	if err != nil {
-		return nil, err
-	}
+func NewLSH(
+	config LSHConfig,
+	hashFamily interfaces.HashFamily,
+	similarityMeasure interfaces.SimilarityMeasure,
+	store interfaces.Store,
+) (*LSH, error) {
 	return &LSH{
 		config:            config,
 		hashFamily:        hashFamily,

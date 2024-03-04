@@ -35,9 +35,6 @@ import (
     "fmt"
 
     "github.com/agtabesh/lsh"
-    "github.com/agtabesh/lsh/hash_family"
-    "github.com/agtabesh/lsh/similarity_measure"
-    "github.com/agtabesh/lsh/store"
     "github.com/agtabesh/lsh/types"
 )
 ```
@@ -50,12 +47,13 @@ To create an instance of LSH, you need to specify the configuration parameters u
 config := lsh.LSHConfig{
     SignatureSize:     128,
     BandSize:          64,
-    HashFamily:        hash_family.XXHash64,
-    SimilarityMeasure: similarity_measure.HammingSimilarity,
-    Store:             store.InMemoryStore,
 }
 
-instance, err := lsh.NewLSH(config)
+hashFamily := lsh.NewXXHASH64HashFamily(config.SignatureSize)
+similarityMeasure := lsh.NewHammingSimilarity()
+store := lsh.NewInMemoryStore()
+
+instance, err := NewLSH(config, hashFamily, similarityMeasure, store)
 if err != nil {
     // Handle error
 }
@@ -91,11 +89,11 @@ You can perform a query using a vector ID using the `QueryByVectorID` method:
 ctx := context.Background()
 vectorID := types.VectorID("0")
 count := 5
-similarVectorsId, err := instance.QueryByVectorID(ctx, vectorID, count)
+similarVectorsID, err := instance.QueryByVectorID(ctx, vectorID, count)
 if err != nil {
     // Handle error
 }
-fmt.Println("similarVectors", similarVectorsId)
+fmt.Println("similarVectors", similarVectorsID)
 ```
 
 ### Querying by Vector
@@ -106,11 +104,9 @@ You can perform a query using a vector using the `QueryByVector` method:
 ctx := context.Background()
 vector := types.Vector{"feat1": 1, "feat2": 1, "feat3": 1}
 count := 5
-similarVectorsId, err := lsh.QueryByVector(ctx, vector, count)
+similarVectorsID, err := lsh.QueryByVector(ctx, vector, count)
 if err != nil {
     // Handle error
 }
-fmt.Println("similarVectors", similarVectorsId)
+fmt.Println("similarVectors", similarVectorsID)
 ```
-
-
