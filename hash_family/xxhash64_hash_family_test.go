@@ -9,7 +9,7 @@ import (
 func TestHash(t *testing.T) {
 	count := 3
 	text := "sample text"
-	hf := newXXHASH64HashFamily(count)
+	hf := NewXXHASH64HashFamily(count)
 	hashes := hf.Hash(text)
 
 	expectedCount := count
@@ -40,7 +40,7 @@ func TestHash(t *testing.T) {
 func TestMinHash(t *testing.T) {
 	count := 3
 	vector := types.Vector{"a": 1, "b": 1, "c": 1}
-	hf := newXXHASH64HashFamily(count)
+	hf := NewXXHASH64HashFamily(count)
 	hashes := hf.MinHash(vector)
 
 	expectedCount := count
