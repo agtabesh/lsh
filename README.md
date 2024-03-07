@@ -104,7 +104,7 @@ You can perform a query using a vector using the `QueryByVector` method:
 ctx := context.Background()
 vector := types.Vector{"feat1": 1, "feat2": 1, "feat3": 1}
 count := 5
-similarVectorsID, err := lsh.QueryByVector(ctx, vector, count)
+similarVectorsID, err := instance.QueryByVector(ctx, vector, count)
 if err != nil {
     // Handle error
 }
