@@ -45,8 +45,7 @@ To create an instance of LSH, you need to specify the configuration parameters u
 
 ```go
 config := lsh.LSHConfig{
-    SignatureSize:     128,
-    BandSize:          64,
+    SignatureSize:     128, // It is better to be a power of 2
 }
 
 hashFamily := lsh.NewXXHASH64HashFamily(config.SignatureSize)
