@@ -20,6 +20,9 @@ func (s Signature) Buckets() Buckets {
 			}
 			buckets[i] = sum
 			i += 1
+			if i == size {
+				break
+			}
 		}
 	}
 	return buckets
