@@ -8,7 +8,7 @@ import (
 
 type Store interface {
 	GetSignatureByVectorID(ctx context.Context, vectorID types.VectorID) (types.Signature, error)
-	GetVectorsIDInBuckets(ctx context.Context, bucketsID types.Buckets) ([]types.VectorID, error)
+	GetVectorsIDInBucket(ctx context.Context, bucketID types.Bucket) (chan types.VectorID, error)
 	UpdateSignatureByVectorID(ctx context.Context, vectorID types.VectorID, signature types.Signature) error
 	UpdateBucketsByVectorID(ctx context.Context, vectorID types.VectorID, bucketsID types.Buckets) error
 }

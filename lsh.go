@@ -10,7 +10,6 @@ import (
 // LSHConfig holds configuration parameters for LSH.
 type LSHConfig struct {
 	SignatureSize int // SignatureSize is the size of the signature.
-	BandSize      int // BandSize is the size of the band for hashing.
 }
 
 // LSH represents the Locality Sensitive Hashing service.
@@ -51,7 +50,7 @@ func (s *LSH) Add(ctx context.Context, vectorID types.VectorID, vector types.Vec
 	}
 
 	// Compute buckets for the updated signature.
-	buckets := signature.Buckets(s.config.BandSize)
+	buckets := signature.Buckets()
 
 	// Update the signature and buckets in the store.
 	s.store.UpdateSignatureByVectorID(ctx, vectorID, signature)
@@ -83,24 +82,32 @@ func (s *LSH) QueryByVector(ctx context.Context, vector types.Vector, count int)
 
 // query performs the actual query using the provided signature.
 func (s *LSH) query(ctx context.Context, signature types.Signature, count int) ([]types.VectorID, error) {
-	// Compute buckets for the provided signature.
-	buckets := signature.Buckets(s.config.BandSize)
+	bucketCtx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	// Get candidate vectors from the buckets.
-	candidateVectorsID, err := s.store.GetVectorsIDInBuckets(ctx, buckets)
-	if err != nil {
-		return []types.VectorID{}, err
-	}
-
-	// Compute similarities between the query signature and candidate signatures.
+	// Calculate buckets for the provided signature.
+	buckets := signature.Buckets()
 	similarities := make(types.Similarities)
-	for _, candidateID := range candidateVectorsID {
-		candidateSignature, err := s.store.GetSignatureByVectorID(ctx, candidateID)
+	for _, bucket := range buckets {
+		// Get candidate vectors from the buckets.
+		candidateVectorsIDChan, err := s.store.GetVectorsIDInBucket(bucketCtx, bucket)
 		if err != nil {
 			return []types.VectorID{}, err
 		}
 
-		similarities[candidateID] = s.similarityMeasure.Measure(signature, candidateSignature)
+		// Calculate similarities between the query signature and candidate signatures.
+		for candidateID := range candidateVectorsIDChan {
+			candidateSignature, err := s.store.GetSignatureByVectorID(ctx, candidateID)
+			if err != nil {
+				return []types.VectorID{}, err
+			}
+
+			similarities[candidateID] = s.similarityMeasure.Measure(signature, candidateSignature)
+			if len(similarities) >= count {
+				cancel()
+				break
+			}
+		}
 	}
 
 	// Return top similar vectors.
