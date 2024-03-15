@@ -9,6 +9,8 @@ import (
 
 var _ interfaces.Store = (*InMemoryStore)(nil)
 
+const BUCKET_WINDOW_SIZE_START = 1
+
 // InMemoryStore is a struct that implements the Store interface
 type InMemoryStore struct {
 	signaturesMap map[types.VectorID]types.Signature
@@ -28,28 +30,42 @@ func (s *InMemoryStore) GetSignatureByVectorID(ctx context.Context, vectorID typ
 	return s.signaturesMap[vectorID], nil
 }
 
-// GetVectorsIDInBuckets retrieves vector IDs associated with given bucket IDs
-func (s *InMemoryStore) GetVectorsIDInBuckets(ctx context.Context, bucketsID types.Buckets) ([]types.VectorID, error) {
-	vectorsMap := make(map[types.VectorID]bool)
-	for _, bucketID := range bucketsID {
-		for vectorID, bucketID2 := range s.bucketsMap {
-			for _, b1 := range bucketID2 {
-				if b1 != bucketID {
+// GetVectorsIDInBucket retrieves vector IDs associated with given bucket IDs
+func (s *InMemoryStore) GetVectorsIDInBucket(ctx context.Context, bucketID types.Bucket) (chan types.VectorID, error) {
+	vectorIDMap := make(map[types.VectorID]bool)
+	ch := make(chan types.VectorID)
+	go func() {
+		defer func() {
+			vectorIDMap = make(map[types.VectorID]bool)
+			close(ch)
+		}()
+
+		bucketWindowSize := BUCKET_WINDOW_SIZE_START
+		i := 0
+		for vID, bsID := range s.bucketsMap {
+			for _, bID := range bsID {
+				i += 1
+				if i == bucketWindowSize {
+					select {
+					case <-ctx.Done():
+						return
+					default:
+						bucketWindowSize *= 2
+						i = 0
+					}
+				}
+				if bID != bucketID {
 					continue
 				}
-				if vectorsMap[vectorID] {
+				if _, ok := vectorIDMap[vID]; ok {
 					continue
 				}
-				vectorsMap[vectorID] = true
+				ch <- vID
+				vectorIDMap[vID] = true
 			}
 		}
-	}
-	vectorsID := make([]types.VectorID, 0)
-	for vectorID := range vectorsMap {
-		vectorsID = append(vectorsID, vectorID)
-	}
-
-	return vectorsID, nil
+	}()
+	return ch, nil
 }
 
 // UpdateSignatureByVectorID updates the signature for a given vector ID
