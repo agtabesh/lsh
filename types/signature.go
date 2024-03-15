@@ -4,16 +4,23 @@ type SignatureEntry uint64
 type Signature []SignatureEntry
 type Signatures []Signature
 
-func (s Signature) Buckets(numOfBands int) Buckets {
-	rowsPerBand := len(s) / numOfBands
-	buckets := make(Buckets, numOfBands)
-	for i := 0; i < numOfBands; i += 1 {
-		sum := Bucket(0)
-		for j := 0; j < rowsPerBand; j += 1 {
-			k := i*rowsPerBand + j
-			sum += Bucket(s[k] / SignatureEntry(rowsPerBand))
+// this function generate merkle tree of the signature to create buckets
+func (s Signature) Buckets() Buckets {
+	size := len(s) - 1
+	buckets := make(Buckets, size)
+	i := 0
+	for i < size {
+		rowsPerBand := len(s) / (i + 1)
+		numOfBands := len(s) / rowsPerBand
+		for k := 0; k < numOfBands; k += 1 {
+			sum := Bucket(0)
+			for j := 0; j < rowsPerBand; j += 1 {
+				m := k*rowsPerBand + j
+				sum += Bucket(s[m] / SignatureEntry(rowsPerBand))
+			}
+			buckets[i] = sum
+			i += 1
 		}
-		buckets[i] = sum
 	}
 	return buckets
 }

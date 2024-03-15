@@ -10,7 +10,6 @@ import (
 // LSHConfig holds configuration parameters for LSH.
 type LSHConfig struct {
 	SignatureSize int // SignatureSize is the size of the signature.
-	BandSize      int // BandSize is the size of the band for hashing.
 }
 
 // LSH represents the Locality Sensitive Hashing service.
@@ -51,7 +50,7 @@ func (s *LSH) Add(ctx context.Context, vectorID types.VectorID, vector types.Vec
 	}
 
 	// Compute buckets for the updated signature.
-	buckets := signature.Buckets(s.config.BandSize)
+	buckets := signature.Buckets()
 
 	// Update the signature and buckets in the store.
 	s.store.UpdateSignatureByVectorID(ctx, vectorID, signature)

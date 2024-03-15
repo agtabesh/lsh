@@ -76,7 +76,6 @@ func TestQueryByVector(t *testing.T) {
 func getConfig() LSHConfig {
 	return LSHConfig{
 		SignatureSize: 128,
-		BandSize:      16,
 	}
 }
 
