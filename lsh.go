@@ -106,10 +106,10 @@ func (s *LSH) query(ctx context.Context, signature types.Signature, count int) (
 			}
 
 			similarities[candidateID] = s.similarityMeasure.Measure(signature, candidateSignature)
-			if len(similarities) >= count {
-				cancel()
-				break
-			}
+		}
+		if len(similarities) >= count {
+			cancel()
+			break
 		}
 	}
 
