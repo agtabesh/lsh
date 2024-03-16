@@ -97,16 +97,19 @@ func (s *LSH) query(ctx context.Context, signature types.Signature, count int) (
 
 		// Calculate similarities between the query signature and candidate signatures.
 		for candidateID := range candidateVectorsIDChan {
+			if _, ok := similarities[candidateID]; ok {
+				continue
+			}
 			candidateSignature, err := s.store.GetSignatureByVectorID(ctx, candidateID)
 			if err != nil {
 				return []types.VectorID{}, err
 			}
 
 			similarities[candidateID] = s.similarityMeasure.Measure(signature, candidateSignature)
-			if len(similarities) >= count {
-				cancel()
-				break
-			}
+		}
+		if len(similarities) >= count {
+			cancel()
+			break
 		}
 	}
 
