@@ -53,8 +53,8 @@ func (s *LSH) Add(ctx context.Context, vectorID types.VectorID, vector types.Vec
 	buckets := signature.Buckets()
 
 	// Update the signature and buckets in the store.
-	s.store.UpdateSignatureByVectorID(ctx, vectorID, signature)
 	s.store.UpdateBucketsByVectorID(ctx, vectorID, buckets)
+	s.store.UpdateSignatureByVectorID(ctx, vectorID, signature)
 
 	return nil
 }
